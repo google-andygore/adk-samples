@@ -1,107 +1,149 @@
 # Podcast Transcript Agent
 
-The Podcast Transcript Agent is a powerful tool that automates the creation of podcast transscripts from any PDF/Markdown/Text document. By leveraging a series of specialized AI agents, it can take a source document and generate a complete, conversational podcast transcript.
+**The Podcast Transcript Agent is a powerful tool that automates the creation of podcast transcripts from any PDF, Markdown, or Text document.** By leveraging a series of specialized AI agents, it can take a source document and generate a complete, conversational podcast transcript.
 
-## Architecture
+## Agent Details
 
-The Podcast Agent operates as a sequential process, where each step is handled by a dedicated sub-agent. The output of one agent becomes the input for the next, ensuring a smooth and logical workflow from topic extraction to the final script.
+The Podcast Transcript Agent is a sequential agent that orchestrates a series of sub-agents to perform the task of generating a podcast transcript. It takes a user-provided document and guides it through a pipeline of three specialized agents:
 
-![Podcast Transcript Agent Architecture](assets/podcast_transcript_agent_architecture_v2.png)
+1.  **Podcast Topics Agent**: Extracts the key topics and information from the source document.
+2.  **Podcast Episode Planner Agent**: Structures the extracted information into a coherent podcast episode plan.
+3.  **Podcast Transcript Writer Agent**: Writes a full conversational script based on the episode plan.
 
-## Sub-Agents
+## Agent Architecture
 
-### 1. Podcast Topics Agent (`podcast_topics_agent`)
+The Podcast Transcript Agent operates as a sequential process, where each step is handled by a dedicated sub-agent. The output of one agent becomes the input for the next, ensuring a smooth and logical workflow from topic extraction to the final script.
 
-*   **Goal:** To analyze the source document and extract the core information needed to build a podcast episode.
-*   **Process:** This agent reads the provided text and identifies:
-    *   The main topic.
-    *   A summary of the central argument and conclusion.
-    *   The five most important subtopics, complete with descriptive titles, summaries, and key statistics.
-*   **Output:** A structured `PodcastTopics` object containing the extracted information.
-
-### 2. Podcast Episode Planner Agent (`podcast_episode_planner_agent`)
-
-*   **Goal:** To create a high-level structure for the podcast episode.
-*   **Process:** Using the topics and summaries from the previous step, this agent builds a 5-segment episode plan. The plan includes:
-    *   A catchy episode title.
-    *   An introduction to hook the listener.
-    *   Five main segments for the core discussion.
-    *   A conclusion to summarize the key takeaways.
-*   **Output:** A `PodcastEpisodePlan` object that outlines the episode.
-
-### 3. Podcast Transcript Writer Agent (`podcast_transcript_writer_agent`)
-
-*   **Goal:** To write a complete, conversational podcast script.
-*   **Process:** This is the final step in the pipeline. The agent takes the episode plan and the detailed factual information and writes a script featuring two personas:
-    *   **Host:** Guides the conversation and engages the audience.
-    *   **Expert:** Provides in-depth knowledge based on the source document.
-*   **Output:** A `PodcastTranscript` object containing the full script with clear speaker labels.
-
-## Setup and Usage
-
-### Environment Variables
-
-Before running the agent, you need to configure your environment. There are two ways to do this:
-
-**1. API Key Authentication**
-
-Create a `.env` file in the `src/podcast_transcript_agent` directory with the following content:
-
-```bash
-GEMINI_API_KEY="your-api-key"
+```mermaid
+graph LR
+    A[Source Document] --> B(podcast_topics_agent);
+    B --> C(podcast_episode_planner_agent);
+    C --> D(podcast_transcript_writer_agent);
+    D --> E[Podcast Transcript];
 ```
 
-Replace `"your-api-key"` with your actual Gemini API key.
+## Key Features
 
-**2. Vertex AI Authentication**
+*   **Automated Content Repurposing**: Transform existing documents (PDFs, text files) into engaging podcast episodes.
+*   **Conversational Script Generation**: Creates natural-sounding dialogue between a host and an expert persona.
+*   **Structured Episode Planning**: Automatically generates a well-structured episode plan with an introduction, main segments, and a conclusion.
+*   **Customizable Personas**: Easily define the names and roles of the podcast host and expert.
+*   **Extensible Architecture**: The sequential nature of the agent makes it easy to add new steps or modify existing ones.
 
-If you are using Vertex AI, you need to authenticate using `gcloud` and set the following environment variables. Create a `.env` file in the `src/podcast_transcript_agent` directory with the following content:
+## Setup and Installation
+
+### Prerequisites
+
+*   Python 3.13 or higher
+*   An active Google Gemini API key or a configured Google Cloud project with Vertex AI enabled.
+
+### 1. Clone the Repository
 
 ```bash
+git clone https://github.com/google/adk-samples.git
+cd adk-samples/python/agents/podcast_transcript_agent
+```
+
+### 2. Create a Virtual Environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### 3. Install Dependencies
+
+This project uses `uv` to manage dependencies. `uv` is an extremely fast Python package installer and resolver, written in Rust, and is designed as a drop-in replacement for `pip` and `pip-tools`. It provides a more efficient and reliable way to manage your project's dependencies.
+
+To install the dependencies, run the following command:
+
+```bash
+uv sync
+```
+
+### 4. Configure Environment Variables
+
+Create a `.env` file in the root of the project and add the following configuration for Vertex AI Authentication:
+
+```
 GOOGLE_GENAI_USE_VERTEXAI=TRUE
 GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
 GOOGLE_CLOUD_LOCATION="your-gcp-region"
 ```
 
-Replace `"your-gcp-project-id"` and `"your-gcp-region"` with your actual GCP project ID and region.
-
-You also need to be authenticated with `gcloud`. If you haven't already, run the following command:
+If you are using Vertex AI, make sure you are authenticated with `gcloud`:
 
 ```bash
 gcloud auth application-default login
 ```
 
-### Installation
+## Running the Agent
 
-1.  **Installation:**
+You can run the agent in two ways: through the interactive web interface or as a standalone API server.
 
-    First, create and activate a virtual environment:
+### Using the ADK Web Interface
 
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
+The web interface provides a user-friendly way to interact with the agent.
 
-    Then, install the required dependencies from the `src/requirements.txt` file:
+To start the web interface, run the following command from the root of the project:
 
-    ```bash
-    pip install -r src/requirements.txt
-    ```
+```bash
+adk web
+```
 
-2.  **Running the Agent:**
+This will start a local server and open a web browser with the agent's user interface.
 
-    You can run the agent using the example scripts in the `tests` directory.
+#### Uploading Files
 
-    **With a PDF file (`test_paper.pdf`):**
+The web interface allows you to easily upload PDF and text files to the agent.
 
-    ```bash
-    ./tests/run_with_pdf.sh
-    ```
+1.  In the chat interface, you will see a paperclip icon for attachments.
+2.  Click the paperclip icon to open a file dialog.
+3.  Select the PDF or text file you want to use to generate the podcast transcript.
+4.  The file will be uploaded and sent to the agent along with your prompt.
 
-    **With a text file (`test_pyramid.txt`):**
+### Using the ADK API Server
 
-    ```bash
-    ./tests/run_with_txt.sh
-    ```
+You can also run the agent as a standalone API server. This is useful for programmatic access or for integrating the agent into other applications.
 
-    These scripts will run the agent with the provided test artifacts and output the final transcript to the console.
+To start the API server, run the following command:
+
+```bash
+adk api-server
+```
+
+This will start a local server at `http://localhost:8000`.
+
+#### Example Interaction
+
+You can interact with the running API server using the provided shell scripts in the `tests` directory.
+
+**Example with a text file:**
+
+```bash
+./tests/run_with_txt.sh
+```
+
+This script sends the content of `tests/test_artifacts/test_pyramid.txt` to the agent and saves the agent's response in `test_response.json`.
+
+## Testing
+
+To run the included tests, use `pytest`:
+
+```bash
+.venv/bin/pytest
+```
+
+## Customization
+
+This agent is designed to be easily customizable:
+
+*   **Prompts**: You can modify the prompts for each sub-agent to change the style and tone of the generated podcast.
+*   **Personas**: The host and expert personas can be changed by modifying the prompt in the `podcast_transcript_writer_agent`.
+*   **Sub-Agents**: You can add new sub-agents to the sequence to perform additional tasks, such as generating show notes or social media posts.
+
+## Troubleshooting
+
+*   **Authentication Errors**: Ensure that your API key or Vertex AI environment variables are correctly set in the `.env` file.
+*   **Dependency Issues**: Make sure you have installed all the required dependencies from `requirements.txt` in your virtual environment.
+*   **File Not Found**: The example scripts use relative paths. Make sure you are running them from the root of the `podcast_transcript_agent` directory.
