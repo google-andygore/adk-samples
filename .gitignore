@@ -209,3 +209,4 @@ bin/
 
 # Local VSCode settings
 .vscode/
+python/agents/podcast_transcript_agent/tests/test_response.json
