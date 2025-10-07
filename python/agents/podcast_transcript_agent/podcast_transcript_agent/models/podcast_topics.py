@@ -17,6 +17,8 @@ from pydantic import BaseModel, Field
 
 
 class Topic(BaseModel):
+    """A model for a podcast topic, which includes a title, description, and key facts."""
+
     topic_name: str = Field(
         ..., description="A concise and catchy title for the podcast topic."
     )
@@ -31,6 +33,8 @@ class Topic(BaseModel):
 
 
 class PodcastTopics(BaseModel):
+    """A model for the main topic and sub-topics of a podcast episode."""
+
     main_topic: str = Field(
         ..., description="A concise and catchy title for the podcast topic."
     )
