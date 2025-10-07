@@ -53,7 +53,7 @@ source .venv/bin/activate
 
 ### 3. Install Dependencies
 
-This project uses `uv` to manage dependencies. `uv` is an extremely fast Python package installer and resolver, written in Rust, and is designed as a drop-in replacement for `pip` and `pip-tools`. It provides a more efficient and reliable way to manage your project's dependencies.
+This project uses `uv` to manage dependencies. `uv` is an extremely fast Python package installer and resolver. It provides a more efficient and reliable way to manage your project's dependencies.
 
 To install the dependencies, run the following command:
 
