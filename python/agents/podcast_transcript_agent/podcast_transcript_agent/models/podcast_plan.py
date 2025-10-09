@@ -16,14 +16,6 @@ from typing import List
 from pydantic import BaseModel, Field
 from podcast_transcript_agent.models.podcast_transcript import PodcastSpeaker
 
-
-class ScriptPoint(BaseModel):
-    """Represents a single line of dialogue from a specific speaker."""
-
-    speaker: str
-    dialogue: str
-
-
 class Segment(BaseModel):
     """A model for a 'main_segment', which includes a title."""
 
