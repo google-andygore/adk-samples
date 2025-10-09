@@ -14,7 +14,7 @@
 
 
 from typing import List
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 class SpeakerDialogue(BaseModel):
     """A model for a speaker's dialogue, including the speaker's ID and the text of the dialogue."""

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from typing import List
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from podcast_transcript_agent.models.podcast_transcript import PodcastSpeaker
 
 class Segment(BaseModel):
@@ -21,7 +21,6 @@ class Segment(BaseModel):
 
     title: str
     script_points: List[str]
-
 
 class PodcastEpisodePlan(BaseModel):
     """Represents the entire episode, containing a title and a list of segments."""

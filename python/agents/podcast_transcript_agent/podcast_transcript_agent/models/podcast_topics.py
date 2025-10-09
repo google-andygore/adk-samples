@@ -13,29 +13,15 @@
 # limitations under the License.
 
 from typing import List
-from pydantic import BaseModel, Field
-
+from pydantic import BaseModel
 
 class Topic(BaseModel):
     """A model for a podcast topic, which includes a title, description, and key facts."""
-
-    topic_name: str = Field(
-        ..., description="A concise and catchy title for the podcast topic."
-    )
-    description: str = Field(
-        ...,
-        description=(
-            "A detailed, engaging description for the podcast topic, around 2-3"
-            " sentences long."
-        ),
-    )
+    topic_name: str
+    description: str
     key_facts: list[str]
-
 
 class PodcastTopics(BaseModel):
     """A model for the main topic and sub-topics of a podcast episode."""
-
-    main_topic: str = Field(
-        ..., description="A concise and catchy title for the podcast topic."
-    )
+    main_topic: str
     sub_topics: List[Topic]
